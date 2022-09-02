@@ -13,3 +13,25 @@ db.ventasservicios
 //consultas 
 
 db.consultahistoricos.find({doctorAPasar: 'David Reyes'}).sort({fechaIngreso: -1})
+
+//condicional para traer los pacientes excluidos y dejarlos disponibles
+db.bancosangres.aggregate([
+    {
+        $project:{
+            
+           estatus: {
+           
+               $cond: { 
+                   
+                if: {
+                    $gte: ["$fecha_termino", Date() ], 
+                   },
+
+                   then : "TERMINADO", 
+                    else : 'AUN NO' 
+                       
+                   }
+           }
+         } 
+    }
+   ]);
